@@ -1,0 +1,65 @@
+<!-- Search title wise -->
+<form>
+    <div class="row mt-3">
+        <div class="col-6">
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <div class="col-2">
+                        <label for="search">Search:</label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control ml-3" id="filter" name="filter" type="text" [(ngModel)]="filter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Table for Story -->
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>URL</th>
+                <th>Created At</th>
+                <th>Author</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="storyList.length < 1">
+                <td colspan="5">Loading Data From the Server....</td>
+            </tr>
+
+            <tr *ngFor="let item of storyList| titleFilter:filter;let i = index; " (click)="storyData=item;open(content)">
+                <td>{{i+1}}</td>
+                <td>{{item.title}}</td>
+                <td>{{item.url}}</td>
+                <td>{{item.author}}</td>
+                <td>{{item.created_at | date:'medium'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- modal component for JSON  -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Story Detail</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <div class="card-body p-0">
+            <h5 class="card-title">{{ storyData?.title }}</h5>
+            <p class="card-text"><strong>URL:</strong> {{storyData?.url}}</p>
+            <p><strong>Points:</strong> {{storyData?.points}} </p>
+            <p><strong>Author: </strong> {{storyData?.author}}</p>
+            <p><strong>Tags: </strong> <span *ngFor="let tag of storyData._tags" class="badge badge-danger mr-2">{{tag}}</span></p>
+        </div>
+    </div>
+</ng-template>
